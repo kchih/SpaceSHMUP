@@ -63,7 +63,7 @@ public class Utils : MonoBehaviour
 	
 	//function used by camBound property and also may be called directly
 	
-	public static void SetCameraBounds(Camera cam=null) {
+	public static void SetCameraBounds(Camera cam = null) {
 		// use the main camera as default if none passed in.
 		if (cam == null)
 			cam = Camera.main;
@@ -191,9 +191,33 @@ public class Utils : MonoBehaviour
 		return (Vector3.zero);  // if we get here something went wrong
 	
 	} // end BoundsInBoundsCheck
+
+	public static GameObject FindTaggedParent(GameObject go){
+		if (go.tag != "Untagged") {
+			return(go);
+		}
+		if (go.transform.parent == null) {
+			return(null);
+		}
+		return(FindTaggedParent (go.transform.parent.gameObject));
+	}
+	public static GameObject FindTaggedParent(Transform t){
+		return(FindTaggedParent (t.gameObject));
+	}
+
 	
-	
-	
-}// End of Util Class
+	static public Material[] GetAllMaterials( GameObject go){
+		List<Material> mats = new List<Material>();
+		if(go.renderer != null) {
+			mats.Add(go.renderer.material);
+		}
+		foreach(Transform t in go.transform){
+			mats.AddRange(GetAllMaterials(t.gameObject));
+		}
+		return(mats.ToArray());
+	}
+}
+
+
 
 
